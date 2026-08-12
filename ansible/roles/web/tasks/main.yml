@@ -36,9 +36,3 @@
     owner: www-data
     group: www-data
     mode: "0644"
-
-handlers:
-  - name: reload nginx
-    ansible.builtin.service:
-      name: nginx
-      state: reloaded
