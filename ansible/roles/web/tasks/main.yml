@@ -1,0 +1,44 @@
+---
+- name: Install web packages
+  ansible.builtin.apt:
+    name:
+      - nginx
+      - php-fpm
+      - php-cli
+      - php-mysql
+      - php-curl
+      - php-xml
+    state: present
+    update_cache: true
+
+- name: Remove default NGINX site
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: reload nginx
+
+- name: Ensure NGINX is enabled and running
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: true
+
+- name: Ensure PHP-FPM is enabled and running
+  ansible.builtin.service:
+    name: php8.3-fpm
+    state: started
+    enabled: true
+
+- name: Create platform health endpoint
+  ansible.builtin.copy:
+    dest: /var/www/html/healthz
+    content: "ok\n"
+    owner: www-data
+    group: www-data
+    mode: "0644"
+
+handlers:
+  - name: reload nginx
+    ansible.builtin.service:
+      name: nginx
+      state: reloaded
