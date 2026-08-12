@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 30s
+  evaluation_interval: 30s
+
+rule_files:
+  - alerts.yml
+
+scrape_configs:
+  - job_name: platform-web
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - app:9100
+        labels:
+          service: web
+          environment: demo
